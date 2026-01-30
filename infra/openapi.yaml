@@ -1,0 +1,71 @@
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: x-api-key
+    in: header
+
+
+
+swagger: "2.0"
+
+info:
+  title: Star Wars API - GCP
+  description: >
+    API serverless construída em Google Cloud utilizando
+    Cloud Functions e API Gateway para consumo da SWAPI.
+  version: "1.0.0"
+
+schemes:
+  - https
+
+produces:
+  - application/json
+
+paths:
+  /starwars:
+    get:
+      summary: Consulta dados do universo Star Wars
+      description: >
+        Permite consultar recursos da SWAPI com filtros,
+        ordenação e dados correlacionados.
+      operationId: starwars
+
+      parameters:
+        - name: resource
+          in: query
+          type: string
+          required: true
+          description: Recurso da SWAPI (people, films, planets, starships)
+
+        - name: search
+          in: query
+          type: string
+          required: false
+          description: Busca textual
+
+        - name: sort
+          in: query
+          type: string
+          required: false
+          description: Campo para ordenação dos resultados
+
+        - name: include
+          in: query
+          type: string
+          required: false
+          description: Inclusão de dados correlacionados (ex: characters)
+
+      x-google-backend:
+        address: https://service-name-785510026188.europe-west1.run.app
+        protocol: h2
+
+      responses:
+        "200":
+          description: Sucesso
+        "400":
+          description: Erro de validação
+        "500":
+          description: Erro interno
+
+security:
+        - api_key: []
